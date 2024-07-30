@@ -68,7 +68,7 @@ namespace vMenuClient
         internal void ImportData(IDictionary<string, object> data, CallbackDelegate cb)
         {
             SetNuiFocus(false, false);
-            Notify.Info("Debug info: This feature is not yet available, check back later.");
+            Notify.Info("Debug info: 此功能尚未推出，请稍后查看.");
             cb(JsonConvert.SerializeObject(new { ok = true }));
         }
 
@@ -76,7 +76,7 @@ namespace vMenuClient
         internal void DisableImportExportNUI(IDictionary<string, object> data, CallbackDelegate cb)
         {
             SetNuiFocus(false, false);
-            Notify.Info("Debug info: Closing import/export NUI window.");
+            Notify.Info("Debug info: 关闭导入/导出 NUI 窗口.");
             cb(JsonConvert.SerializeObject(new { ok = true }));
         }
 
@@ -291,7 +291,7 @@ namespace vMenuClient
         /// </summary>
         private void KillMe(string sourceName)
         {
-            Notify.Alert($"You have been killed by <C>{GetSafePlayerName(sourceName)}</C>~s~ using the ~r~Kill Player~s~ option in vMenu.");
+            Notify.Alert($"您已被 ~r~{GetSafePlayerName(sourceName)}~s~ 使用 vMenu中~r~击杀玩家~s~功能所击杀.");
             SetEntityHealth(Game.PlayerPed.Handle, 0);
         }
 
@@ -348,7 +348,7 @@ namespace vMenuClient
                     {
                         if (!vehicle.IsStopped)
                         {
-                            Notify.Alert("The owner of this vehicle is reclaiming their personal vehicle. You will be kicked from this vehicle in about 10 seconds. Stop the vehicle now to avoid taking damage.", false, true);
+                            Notify.Alert("此载具车主正在收回他们的私人座驾. 大约10秒后, 您将被踢出此载具. 立即停车, 以免受到伤害.", false, true);
                         }
 
                         // Wait for the vehicle to come to a stop, or 10 seconds, whichever is faster.
@@ -368,7 +368,7 @@ namespace vMenuClient
                             // Make the ped jump out because the car isn't stopped yet.
                             if (!vehicle.IsStopped)
                             {
-                                Notify.Info("You were warned, now you'll have to suffer the consequences!");
+                                Notify.Info("警告过你了, 现在你得承担后果了!");
                                 TaskLeaveVehicle(Game.PlayerPed.Handle, vehicle.Handle, 4160);
                             }
                             // Make the ped exit gently.

@@ -27,12 +27,12 @@ namespace vMenuClient.menus
         {
             #region initial setup.
             // Create the menu.
-            menu = new Menu(Game.Player.Name, "Vehicle Spawner");
+            menu = new Menu(Game.Player.Name, "载具快捷生成");
 
             // Create the buttons and checkboxes.
-            var spawnByName = new MenuItem("Spawn Vehicle By Model Name", "Enter the name of a vehicle to spawn.");
-            var spawnInVeh = new MenuCheckboxItem("Spawn Inside Vehicle", "This will teleport you into the vehicle when you spawn it.", SpawnInVehicle);
-            var replacePrev = new MenuCheckboxItem("Replace Previous Vehicle", "This will automatically delete your previously spawned vehicle when you spawn a new vehicle.", ReplaceVehicle);
+            var spawnByName = new MenuItem("按代码生成载具", "输入有效的载具代码并生成载具.");
+            var spawnInVeh = new MenuCheckboxItem("自动车内", "这将在生成载具时将您传送到载具中.", SpawnInVehicle);
+            var replacePrev = new MenuCheckboxItem("移除旧载具", "这将在您生成新载具时自动删除之前生成的载具.", ReplaceVehicle);
 
             // Add the items to the menu.
             if (IsAllowed(Permission.VSSpawnByName))
@@ -45,8 +45,8 @@ namespace vMenuClient.menus
 
             #region addon cars menu
             // Vehicle Addons List
-            var addonCarsMenu = new Menu("Addon Vehicles", "Spawn An Addon Vehicle");
-            var addonCarsBtn = new MenuItem("Addon Vehicles", "A list of addon vehicles available on this server.") { Label = "→→→" };
+            var addonCarsMenu = new Menu("添加型载具", "生成添加型载具");
+            var addonCarsBtn = new MenuItem("添加型载具", "本服务器上可用的添加型载具列表.") { Label = "→→→" };
 
             menu.AddMenuItem(addonCarsBtn);
 
@@ -58,20 +58,20 @@ namespace vMenuClient.menus
                     {
                         MenuController.BindMenuItem(menu, addonCarsMenu, addonCarsBtn);
                         MenuController.AddSubmenu(menu, addonCarsMenu);
-                        var unavailableCars = new Menu("Addon Spawner", "Unavailable Vehicles");
-                        var unavailableCarsBtn = new MenuItem("Unavailable Vehicles", "These addon vehicles are not currently being streamed (correctly) and are not able to be spawned.") { Label = "→→→" };
+                        var unavailableCars = new Menu("添加型载具", "不可用载具");
+                        var unavailableCarsBtn = new MenuItem("不可用载具", "这些添加型载具目前无法(正确地)进行流式传输, 也无法生成.") { Label = "→→→" };
                         MenuController.AddSubmenu(addonCarsMenu, unavailableCars);
 
                         for (var cat = 0; cat < 23; cat++)
                         {
-                            var categoryMenu = new Menu("Addon Spawner", GetLabelText($"VEH_CLASS_{cat}"));
-                            var categoryBtn = new MenuItem(GetLabelText($"VEH_CLASS_{cat}"), $"Spawn an addon vehicle from the {GetLabelText($"VEH_CLASS_{cat}")} class.") { Label = "→→→" };
+                            var categoryMenu = new Menu("添加型载具", GetLabelText($"VEH_CLASS_{cat}"));
+                            var categoryBtn = new MenuItem(GetLabelText($"VEH_CLASS_{cat}"), $"选择 {GetLabelText($"VEH_CLASS_{cat}")} 分类中的生成添加型载具.") { Label = "→→→" };
 
                             addonCarsMenu.AddMenuItem(categoryBtn);
 
                             if (!allowedCategories[cat])
                             {
-                                categoryBtn.Description = "This vehicle class is disabled by the server.";
+                                categoryBtn.Description = "本服务器已禁用该载具类别.";
                                 categoryBtn.Enabled = false;
                                 categoryBtn.LeftIcon = MenuItem.Icon.LOCK;
                                 categoryBtn.Label = "";
@@ -86,7 +86,7 @@ namespace vMenuClient.menus
                                 var name = localizedName != "NULL" ? localizedName : GetDisplayNameFromVehicleModel(veh.Value);
                                 name = name != "CARNOTFOUND" ? name : veh.Key;
 
-                                var carBtn = new MenuItem(name, $"Click to spawn {name}.")
+                                var carBtn = new MenuItem(name, $"点击生成 {name}.")
                                 {
                                     Label = $"({veh.Key})",
                                     ItemData = veh.Key // store the model name in the button data.
@@ -100,7 +100,7 @@ namespace vMenuClient.menus
                                 else
                                 {
                                     carBtn.Enabled = false;
-                                    carBtn.Description = "This vehicle is not available. Please ask the server owner to check if the vehicle is being streamed correctly.";
+                                    carBtn.Description = "此载具不可用. 请要求服务器所有者检查载具是否正确传输.";
                                     carBtn.LeftIcon = MenuItem.Icon.LOCK;
                                     unavailableCars.AddMenuItem(carBtn);
                                 }
@@ -119,7 +119,7 @@ namespace vMenuClient.menus
                             }
                             else
                             {
-                                categoryBtn.Description = "There are no addon cars available in this category.";
+                                categoryBtn.Description = "此类别中无任何添加型载具.";
                                 categoryBtn.Enabled = false;
                                 categoryBtn.LeftIcon = MenuItem.Icon.LOCK;
                                 categoryBtn.Label = "";
@@ -136,21 +136,21 @@ namespace vMenuClient.menus
                     {
                         addonCarsBtn.Enabled = false;
                         addonCarsBtn.LeftIcon = MenuItem.Icon.LOCK;
-                        addonCarsBtn.Description = "There are no addon vehicles available on this server.";
+                        addonCarsBtn.Description = "本服务器上无任何可用的添加型载具.";
                     }
                 }
                 else
                 {
                     addonCarsBtn.Enabled = false;
                     addonCarsBtn.LeftIcon = MenuItem.Icon.LOCK;
-                    addonCarsBtn.Description = "The list containing all addon cars could not be loaded, is it configured properly?";
+                    addonCarsBtn.Description = "无法加载包含所有额外改件的添加型载具的列表,配置是否正确?";
                 }
             }
             else
             {
                 addonCarsBtn.Enabled = false;
                 addonCarsBtn.LeftIcon = MenuItem.Icon.LOCK;
-                addonCarsBtn.Description = "Access to this list has been restricted by the server owner.";
+                addonCarsBtn.Description = "服务器所有者已限制对该列表的访问.";
             }
             #endregion
 
@@ -268,12 +268,12 @@ namespace vMenuClient.menus
                 var className = GetLabelText($"VEH_CLASS_{vehClass}");
 
                 // Create a button & a menu for it, add the menu to the menu pool and add & bind the button to the menu.
-                var btn = new MenuItem(className, $"Spawn a vehicle from the ~o~{className} ~s~class.")
+                var btn = new MenuItem(className, $"从 ~o~{className}~s~ 分类中选择载具并生成.")
                 {
                     Label = "→→→"
                 };
 
-                var vehicleClassMenu = new Menu("Vehicle Spawner", className);
+                var vehicleClassMenu = new Menu("载具生成", className);
 
                 MenuController.AddSubmenu(menu, vehicleClassMenu);
                 menu.AddMenuItem(btn);
@@ -285,7 +285,7 @@ namespace vMenuClient.menus
                 else
                 {
                     btn.LeftIcon = MenuItem.Icon.LOCK;
-                    btn.Description = "This category has been disabled by the server owner.";
+                    btn.Description = "该类别已被服务器所有者禁用.";
                     btn.Enabled = false;
                 }
 
@@ -296,7 +296,7 @@ namespace vMenuClient.menus
                 // Loop through all the vehicles in the vehicle class.
                 foreach (var veh in VehicleData.Vehicles.VehicleClasses[className])
                 {
-                    // Convert the model name to start with a Capital letter, converting the other characters to lowercase. 
+                    // Convert the model name to start with a Capital letter, converting the other characters to lowercase.
                     var properCasedModelName = veh[0].ToString().ToUpper() + veh.ToLower().Substring(1);
 
                     // Get the localized vehicle name, if it's "NULL" (no label found) then use the "properCasedModelName" created above.
@@ -347,7 +347,7 @@ namespace vMenuClient.menus
                             }
                             else
                             {
-                                var vehBtn = new MenuItem(vehName, "This vehicle is not available because the model could not be found in your game files. If this is a DLC vehicle, make sure the server is streaming it.")
+                                var vehBtn = new MenuItem(vehName, "由于在您的游戏文件中找不到该车型, 因此该车型不可用. 如为DLC载具, 请确保服务器是否正确流式传输.")
                                 {
                                     Enabled = false,
                                     Label = $"({vehModelName.ToLower()})",
@@ -378,7 +378,7 @@ namespace vMenuClient.menus
                         }
                         else
                         {
-                            var vehBtn = new MenuItem(vehName, "This vehicle is not available because the model could not be found in your game files. If this is a DLC vehicle, make sure the server is streaming it.")
+                            var vehBtn = new MenuItem(vehName, "由于在您的游戏文件中找不到该车型, 因此该车型不可用. 如为DLC载具, 请确保服务器是否正确流式传输.")
                             {
                                 Enabled = false,
                                 Label = $"({vehModelName.ToLower()})",
