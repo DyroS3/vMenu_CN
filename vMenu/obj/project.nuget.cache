@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "aP2C4ZE1b/s=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Administrator\\Desktop\\vMenu-3.6.3\\vMenu\\vMenuClient.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\citizenfx.core.client\\1.0.6370\\citizenfx.core.client.1.0.6370.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\menuapi.fivem\\3.2.2\\menuapi.fivem.3.2.2.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.3\\microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net452\\1.0.3\\microsoft.netframework.referenceassemblies.net452.1.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

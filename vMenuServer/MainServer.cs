@@ -517,7 +517,7 @@ namespace vMenuServer
                 if (vMenuShared.PermissionsManager.GetPermissionAndParentPermissions(vMenuShared.PermissionsManager.Permission.PVKickPassengers).Any(perm => vMenuShared.PermissionsManager.IsAllowed(perm, source)))
                 {
                     TriggerClientEvent("vMenu:GetOutOfCar", vehicleNetId, playerOwner);
-                    source.TriggerEvent("vMenu:Notify", "All passengers will be kicked out as soon as the vehicle stops moving, or after 10 seconds if they refuse to stop the vehicle.");
+                    source.TriggerEvent("vMenu:Notify", "一旦车辆停止行驶, 所有乘客都将被赶下车；如果乘客拒绝停车, 则在 10 秒钟后被赶下车.");
                 }
             }
         }
@@ -734,18 +734,18 @@ namespace vMenuServer
                     {
                         TriggerEvent("vMenu:KickSuccessful", source.Name, kickReason, targetPlayer.Name);
 
-                        KickLog($"Player: {source.Name} has kicked: {targetPlayer.Name} for: {kickReason}.");
-                        TriggerClientEvent(player: source, eventName: "vMenu:Notify", args: $"The target player (<C>{targetPlayer.Name}</C>) has been kicked.");
+                        KickLog($"玩家: {source.Name} 将: {targetPlayer.Name} 用: {kickReason}.的理由踢出服务器");
+                        TriggerClientEvent(player: source, eventName: "vMenu:Notify", args: $"目标玩家: ({targetPlayer.Name}) 已被成功踢出服务器.");
 
                         // Kick the player from the server using the specified reason.
                         DropPlayer(targetPlayer.Handle, kickReason);
                         return;
                     }
                     // Trigger the client event on the source player to let them know that kicking this player is not allowed.
-                    TriggerClientEvent(player: source, eventName: "vMenu:Notify", args: "Sorry, this player can ~r~not ~w~be kicked.");
+                    TriggerClientEvent(player: source, eventName: "vMenu:Notify", args: "操作无效, 此玩家~r~无法~w~被踢出服务器.");
                     return;
                 }
-                TriggerClientEvent(player: source, eventName: "vMenu:Notify", args: "An unknown error occurred. Report it here: vespura.com/vmenu");
+                TriggerClientEvent(player: source, eventName: "vMenu:Notify", args: "出现未知错误, 请向 vespura.com/vmenu 报告");
             }
             else
             {
@@ -771,7 +771,7 @@ namespace vMenuServer
                     TriggerClientEvent(player: targetPlayer, eventName: "vMenu:KillMe", args: source.Name);
                     return;
                 }
-                TriggerClientEvent(player: source, eventName: "vMenu:Notify", args: "An unknown error occurred. Report it here: vespura.com/vmenu");
+                TriggerClientEvent(player: source, eventName: "vMenu:Notify", args: "出现未知错误. 请向 vespura.com/vmenu 报告");
             }
             else
             {
@@ -797,7 +797,7 @@ namespace vMenuServer
                     TriggerClientEvent(player: targetPlayer, eventName: "vMenu:GoToPlayer", args: source.Handle);
                     return;
                 }
-                TriggerClientEvent(player: source, eventName: "vMenu:Notify", args: "An unknown error occurred. Report it here: vespura.com/vmenu");
+                TriggerClientEvent(player: source, eventName: "vMenu:Notify", args: "出现未知错误. 请向 vespura.com/vmenu 报告");
             }
             else
             {
@@ -819,7 +819,7 @@ namespace vMenuServer
                     {
                         if (vMenuShared.PermissionsManager.IsAllowed(vMenuShared.PermissionsManager.Permission.OPSeePrivateMessages, p))
                         {
-                            p.TriggerEvent("vMenu:Notify", $"[vMenu Staff Log] <C>{source.Name}</C>~s~ sent a PM to <C>{targetPlayer.Name}</C>~s~: {message}");
+                            p.TriggerEvent("vMenu:Notify", $"[vMenu Staff Log] {source.Name}~s~ sent a PM to {targetPlayer.Name}~s~: {message}");
                         }
                     }
                 }
@@ -830,7 +830,7 @@ namespace vMenuServer
         internal void NotifySenderThatDmsAreDisabled([FromSource] Player source, string senderServerId)
         {
             var p = Players[int.Parse(senderServerId)];
-            p?.TriggerEvent("vMenu:Notify", $"Sorry, your private message to <C>{source.Name}</C>~s~ could not be delivered because they disabled private messages.");
+            p?.TriggerEvent("vMenu:Notify", $"对不起, 你发送给 {source.Name}~s~ 的私人消息无法送达, 因为他们禁用了私人消息.");
         }
         #endregion
 

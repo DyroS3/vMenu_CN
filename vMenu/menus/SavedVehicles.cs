@@ -18,10 +18,10 @@ namespace vMenuClient.menus
         // Variables
         private Menu classMenu;
         private Menu savedVehicleTypeMenu;
-        private readonly Menu vehicleCategoryMenu = new("Categories", "Manage Saved Vehicles");
-        private readonly Menu savedVehiclesCategoryMenu = new("Category", "I get updated at runtime!");
-        private readonly Menu selectedVehicleMenu = new("Manage Vehicle", "Manage this saved vehicle.");
-        private readonly Menu unavailableVehiclesMenu = new("Missing Vehicles", "Unavailable Saved Vehicles");
+        private readonly Menu vehicleCategoryMenu = new("自定义分类", "管理已保存载具");
+        private readonly Menu savedVehiclesCategoryMenu = new("自定义分类", "运行时更新!");
+        private readonly Menu selectedVehicleMenu = new("载具管理", "管理保存的载具.");
+        private readonly Menu unavailableVehiclesMenu = new("不可用载具", "无法使用的已保存载具");
         private Dictionary<string, VehicleInfo> savedVehicles = new();
         private readonly List<Menu> subMenus = new();
         private Dictionary<MenuItem, KeyValuePair<string, VehicleInfo>> svMenuItems = new();
@@ -31,23 +31,23 @@ namespace vMenuClient.menus
         private SavedVehicleCategory currentCategory;
 
         // Need to be editable from other functions
-        private readonly MenuListItem setCategoryBtn = new("Set Vehicle Category", new List<string> { }, 0, "Sets this Vehicle's category. Select to save.");
+        private readonly MenuListItem setCategoryBtn = new("设置自定义分类", new List<string> { }, 0, "设置该载具的自定义分类. 选择保存.");
 
         /// <summary>
         /// Creates the menu.
         /// </summary>
         private void CreateClassMenu()
         {
-            var menuTitle = "Saved Vehicles";
+            var menuTitle = "已保存载具";
             #region Create menus and submenus
             // Create the menu.
-            classMenu = new Menu(menuTitle, "Manage Saved Vehicles");
+            classMenu = new Menu(menuTitle, "管理已保存载具");
 
             for (var i = 0; i < 23; i++)
             {
-                var categoryMenu = new Menu("Saved Vehicles", GetLabelText($"VEH_CLASS_{i}"));
+                var categoryMenu = new Menu("已保存载具", GetLabelText($"VEH_CLASS_{i}"));
 
-                var vehClassButton = new MenuItem(GetLabelText($"VEH_CLASS_{i}"), $"All saved vehicles from the {GetLabelText($"VEH_CLASS_{i}")} category.");
+                var vehClassButton = new MenuItem(GetLabelText($"VEH_CLASS_{i}"), $"{GetLabelText($"VEH_CLASS_{i}")} 中全部的已保存载具.");
                 subMenus.Add(categoryMenu);
                 MenuController.AddSubmenu(classMenu, categoryMenu);
                 classMenu.AddMenuItem(vehClassButton);
@@ -65,7 +65,7 @@ namespace vMenuClient.menus
                 };
             }
 
-            var unavailableModels = new MenuItem("Unavailable Saved Vehicles", "These vehicles are currently unavailable because the models are not present in the game. These vehicles are most likely not being streamed from the server.")
+            var unavailableModels = new MenuItem("不可用载具", "因为模型不存在于服务器内, 目前不可用.很可能没有从服务器正确的流式传输.")
             {
                 Label = "→→→"
             };
@@ -85,7 +85,7 @@ namespace vMenuClient.menus
                 // Create new category
                 if (item.ItemData is not SavedVehicleCategory)
                 {
-                    var name = await GetUserInput(windowTitle: "Enter a category name.", maxInputLength: 30);
+                    var name = await GetUserInput(windowTitle: "输入自定义分类名称.", maxInputLength: 30);
                     if (string.IsNullOrEmpty(name) || name.ToLower() == "uncategorized" || name.ToLower() == "create new")
                     {
                         Notify.Error(CommonErrors.InvalidInput);
@@ -93,7 +93,7 @@ namespace vMenuClient.menus
                     }
                     else
                     {
-                        var description = await GetUserInput(windowTitle: "Enter a category description (optional).", maxInputLength: 120);
+                        var description = await GetUserInput(windowTitle: "输入自定义分类描述 (可选).", maxInputLength: 120);
                         var newCategory = new SavedVehicleCategory
                         {
                             Name = name,
@@ -102,7 +102,7 @@ namespace vMenuClient.menus
 
                         if (StorageManager.SaveJsonData("saved_veh_category_" + name, JsonConvert.SerializeObject(newCategory), false))
                         {
-                            Notify.Success($"Your category (~g~<C>{name}</C>~s~) has been saved.");
+                            Notify.Success($"您的类别(~g~{name}~s~)已被保存.");
                             Log($"Saved Category {name}.");
                             MenuController.CloseAllMenus();
                             UpdateSavedVehicleCategoriesMenu();
@@ -112,7 +112,7 @@ namespace vMenuClient.menus
                         }
                         else
                         {
-                            Notify.Error($"Saving failed, most likely because this name (~y~<C>{name}</C>~s~) is already in use.");
+                            Notify.Error($"保存失败! 很可能是因为该 (~y~{name}~s~) 名称已被使用.");
                             return;
                         }
                     }
@@ -123,10 +123,10 @@ namespace vMenuClient.menus
                     currentCategory = item.ItemData;
                 }
 
-                bool isUncategorized = currentCategory.Name == "Uncategorized";
+                bool isUncategorized = currentCategory.Name == "未分类";
 
                 savedVehiclesCategoryMenu.MenuTitle = currentCategory.Name;
-                savedVehiclesCategoryMenu.MenuSubtitle = $"~s~Category: ~y~{currentCategory.Name}";
+                savedVehiclesCategoryMenu.MenuSubtitle = $"~y~自定义分类: ~s~{currentCategory.Name}";
                 savedVehiclesCategoryMenu.ClearMenuItems();
 
                 var iconNames = Enum.GetNames(typeof(MenuItem.Icon)).ToList();
@@ -154,25 +154,25 @@ namespace vMenuClient.menus
                     return iconNames[newIndex];
                 }
 
-                var renameBtn = new MenuItem("Rename Category", "Rename this category.")
+                var renameBtn = new MenuItem("重命名分类", "重新命名此自定义分类.")
                 {
                     Enabled = !isUncategorized
                 };
-                var descriptionBtn = new MenuItem("Change Category Description", "Change this category's description.")
+                var descriptionBtn = new MenuItem("更改类别描述", "更改此自定义分类的描述.")
                 {
                     Enabled = !isUncategorized
                 };
-                var iconBtn = new MenuDynamicListItem("Change Category Icon", iconNames[(int)currentCategory.Icon], new MenuDynamicListItem.ChangeItemCallback(ChangeCallback), "Change this category's icon. Select to save.")
+                var iconBtn = new MenuDynamicListItem("更改分类图标", iconNames[(int)currentCategory.Icon], new MenuDynamicListItem.ChangeItemCallback(ChangeCallback), "更改此自定义分类的图标. 选择保存.")
                 {
                     Enabled = !isUncategorized,
                     RightIcon = currentCategory.Icon
                 };
-                var deleteBtn = new MenuItem("Delete Category", "Delete this category. This can not be undone!")
+                var deleteBtn = new MenuItem("移除分类", "删除此自定义分类. 此功能无法撤销!")
                 {
                     RightIcon = MenuItem.Icon.WARNING,
                     Enabled = !isUncategorized
                 };
-                var deleteCharsBtn = new MenuCheckboxItem("Delete All Vehicles", "If checked, when \"Delete Category\" is pressed, all the saved vehicles in this category will be deleted as well. If not checked, saved vehicles will be moved to \"Uncategorized\".")
+                var deleteCharsBtn = new MenuCheckboxItem("删除全部载具", "如开启勾选, 当尝试 \"移除分类\" 时, 该分类中保存的所有载具也将被删除. 如关闭勾选, 所有载具将移至 \"未分类\" 中.")
                 {
                     Enabled = !isUncategorized
                 };
@@ -183,7 +183,7 @@ namespace vMenuClient.menus
                 savedVehiclesCategoryMenu.AddMenuItem(deleteBtn);
                 savedVehiclesCategoryMenu.AddMenuItem(deleteCharsBtn);
 
-                var spacer = GetSpacerMenuItem("↓ Vehicles ↓");
+                var spacer = GetSpacerMenuItem("↓ 所有载具 ↓");
                 savedVehiclesCategoryMenu.AddMenuItem(spacer);
 
                 if (savedVehicles.Count > 0)
@@ -210,7 +210,7 @@ namespace vMenuClient.menus
 
                         bool canUse = IsModelInCdimage(vehicle.model);
 
-                        var btn = new MenuItem(name.Substring(4), canUse ? "Manage this saved vehicle." : "This model could not be found in the game files. Most likely because this is an addon vehicle and it's currently not streamed by the server.")
+                        var btn = new MenuItem(name.Substring(4), canUse ? "管理此保存的载具." : "在游戏文件中找不到该模型. 最有可能的原因是这是添加载具, 服务器未对其正确进行流式传输.")
                         {
                             Label = $"({vehicle.name}) →→→",
                             Enabled = canUse,
@@ -229,7 +229,7 @@ namespace vMenuClient.menus
                 {
                     // Rename Category
                     case 0:
-                        var name = await GetUserInput(windowTitle: "Enter a new category name", defaultText: currentCategory.Name, maxInputLength: 30);
+                        var name = await GetUserInput(windowTitle: "输入新的分类名称", defaultText: currentCategory.Name, maxInputLength: 30);
 
                         if (string.IsNullOrEmpty(name) || name.ToLower() == "uncategorized" || name.ToLower() == "create new")
                         {
@@ -286,39 +286,39 @@ namespace vMenuClient.menus
                                 }
                             }
 
-                            Notify.Success($"Your category has been renamed to ~g~<C>{name}</C>~s~. {updatedCount}/{totalCount} vehicles updated.");
+                            Notify.Success($"您的类别已更名为~g~{name}~s~. {updatedCount}/{totalCount} 载具更新.");
                             MenuController.CloseAllMenus();
                             UpdateSavedVehicleCategoriesMenu();
                             vehicleCategoryMenu.OpenMenu();
                         }
                         else
                         {
-                            Notify.Error("Something went wrong while renaming your category, your old category will NOT be deleted because of this.");
+                            Notify.Error("重新命名类别时出了问题, 您的旧类别不会因此被删除.");
                         }
                         break;
 
                     // Change Category Description
                     case 1:
-                        var description = await GetUserInput(windowTitle: "Enter a new category description", defaultText: currentCategory.Description, maxInputLength: 120);
+                        var description = await GetUserInput(windowTitle: "输入新的分类描述", defaultText: currentCategory.Description, maxInputLength: 120);
 
                         currentCategory.Description = description;
 
                         if (StorageManager.SaveJsonData("saved_veh_category_" + currentCategory.Name, JsonConvert.SerializeObject(currentCategory), true))
                         {
-                            Notify.Success($"Your category description has been changed.");
+                            Notify.Success($"您的类别描述已更改.");
                             MenuController.CloseAllMenus();
                             UpdateSavedVehicleCategoriesMenu();
                             vehicleCategoryMenu.OpenMenu();
                         }
                         else
                         {
-                            Notify.Error("Something went wrong while changing your category description.");
+                            Notify.Error("更改类别描述时出现问题.");
                         }
                         break;
 
                     // Delete Category
                     case 3:
-                        if (item.Label == "Are you sure?")
+                        if (item.Label == "再次确认?")
                         {
                             bool deleteVehicles = (sender.GetMenuItems().ElementAt(4) as MenuCheckboxItem).Checked;
 
@@ -355,7 +355,7 @@ namespace vMenuClient.menus
                                     }
                                     else
                                     {
-                                        vehicle.Category = "Uncategorized";
+                                        vehicle.Category = "未分类";
 
                                         if (StorageManager.SaveVehicleInfo(saveName, vehicle, true))
                                         {
@@ -370,14 +370,14 @@ namespace vMenuClient.menus
                                 }
                             }
 
-                            Notify.Success($"Your saved category has been deleted. {updatedCount}/{totalCount} vehicles {(deleteVehicles ? "deleted" : "updated")}.");
+                            Notify.Success($"您保存的类别已被删除. {updatedCount}/{totalCount} 载具 {(deleteVehicles ? "已删除" : "已更新")}.");
                             MenuController.CloseAllMenus();
                             UpdateSavedVehicleCategoriesMenu();
                             vehicleCategoryMenu.OpenMenu();
                         }
                         else
                         {
-                            item.Label = "Are you sure?";
+                            item.Label = "再次确认?";
                         }
                         break;
 
@@ -412,19 +412,19 @@ namespace vMenuClient.menus
 
                 if (StorageManager.SaveJsonData("saved_veh_category_" + currentCategory.Name, JsonConvert.SerializeObject(currentCategory), true))
                 {
-                    Notify.Success($"Your category icon been changed to ~g~<C>{iconNames[iconIndex]}</C>~s~.");
+                    Notify.Success($"您的类别图标已更改为 ~g~{iconNames[iconIndex]}~s~.");
                     UpdateSavedVehicleCategoriesMenu();
                 }
                 else
                 {
-                    Notify.Error("Something went wrong while changing your category icon.");
+                    Notify.Error("更改类别图标时发生问题.");
                 }
             };
 
-            var spawnVehicle = new MenuItem("Spawn Vehicle", "Spawn this saved vehicle.");
-            var renameVehicle = new MenuItem("Rename Vehicle", "Rename your saved vehicle.");
-            var replaceVehicle = new MenuItem("~r~Replace Vehicle", "Your saved vehicle will be replaced with the vehicle you are currently sitting in. ~r~Warning: this can NOT be undone!");
-            var deleteVehicle = new MenuItem("~r~Delete Vehicle", "~r~This will delete your saved vehicle. Warning: this can NOT be undone!");
+            var spawnVehicle = new MenuItem("载具生成", "生成此已保存的载具.");
+            var renameVehicle = new MenuItem("重命名载具", "重新命名保存的载具.");
+            var replaceVehicle = new MenuItem("~r~替换载具", "您保存的载具将替换为您当前驾驶的载具. ~r~警告: 此操作不可撤销!");
+            var deleteVehicle = new MenuItem("~r~删除载具", "~r~这将删除您保存的载具. ~r~警告: 此操作不可撤销!");
             selectedVehicleMenu.AddMenuItem(spawnVehicle);
             selectedVehicleMenu.AddMenuItem(renameVehicle);
             selectedVehicleMenu.AddMenuItem(setCategoryBtn);
@@ -460,7 +460,7 @@ namespace vMenuClient.menus
                 }
                 else if (item == renameVehicle)
                 {
-                    var newName = await GetUserInput(windowTitle: "Enter a new name for this vehicle.", maxInputLength: 30);
+                    var newName = await GetUserInput(windowTitle: "输入此载具的新名称.", maxInputLength: 30);
                     if (string.IsNullOrEmpty(newName))
                     {
                         Notify.Error(CommonErrors.InvalidInput);
@@ -474,14 +474,14 @@ namespace vMenuClient.menus
                             {
                                 await BaseScript.Delay(0);
                             }
-                            Notify.Success("Your vehicle has successfully been renamed.");
+                            Notify.Success("您的载具已成功重新命名.");
                             UpdateMenuAvailableCategories();
                             selectedVehicleMenu.GoBack();
                             currentlySelectedVehicle = new KeyValuePair<string, VehicleInfo>(); // clear the old info
                         }
                         else
                         {
-                            Notify.Error("This name is already in use or something unknown failed. Contact the server owner if you believe something is wrong.");
+                            Notify.Error("此名称已被使用或有未知故障. 如果您认为有问题, 请联系服务器所有者.");
                         }
                     }
                 }
@@ -492,8 +492,8 @@ namespace vMenuClient.menus
                         if (replaceButtonPressedCount == 0)
                         {
                             replaceButtonPressedCount = 1;
-                            item.Label = "Press again to confirm.";
-                            Notify.Alert("Are you sure you want to replace this vehicle? Press the button again to confirm.");
+                            item.Label = "再次按键确认.";
+                            Notify.Alert("您确定要更换此载具? 再次按键确认.");
                         }
                         else
                         {
@@ -501,12 +501,12 @@ namespace vMenuClient.menus
                             item.Label = "";
                             SaveVehicle(currentlySelectedVehicle.Key.Substring(4), currentlySelectedVehicle.Value.Category);
                             selectedVehicleMenu.GoBack();
-                            Notify.Success("Your saved vehicle has been replaced with your current vehicle.");
+                            Notify.Success("您保存的载具已更换为当前载具.");
                         }
                     }
                     else
                     {
-                        Notify.Error("You need to be in a vehicle before you can replace your old vehicle.");
+                        Notify.Error("在更换旧车之前, 您必须处于一辆有效载具内.");
                     }
                 }
                 else if (item == deleteVehicle)
@@ -514,8 +514,8 @@ namespace vMenuClient.menus
                     if (deleteButtonPressedCount == 0)
                     {
                         deleteButtonPressedCount = 1;
-                        item.Label = "Press again to confirm.";
-                        Notify.Alert("Are you sure you want to delete this vehicle? Press the button again to confirm.");
+                        item.Label = "再次按键确认.";
+                        Notify.Alert("您确定要删除此载具? 再次按键确认.");
                     }
                     else
                     {
@@ -524,7 +524,7 @@ namespace vMenuClient.menus
                         DeleteResourceKvp(currentlySelectedVehicle.Key);
                         UpdateMenuAvailableCategories();
                         selectedVehicleMenu.GoBack();
-                        Notify.Success("Your saved vehicle has been deleted.");
+                        Notify.Success("您已保存的载具已被删除.");
                     }
                 }
                 if (item != deleteVehicle) // if any other button is pressed, restore the delete vehicle button pressed count.
@@ -547,7 +547,7 @@ namespace vMenuClient.menus
             {
                 string name = listItem.ListItems[listIndex];
 
-                if (name == "Create New")
+                if (name == "新建")
                 {
                     var newName = await GetUserInput(windowTitle: "Enter a category name.", maxInputLength: 30);
                     if (string.IsNullOrEmpty(newName) || newName.ToLower() == "uncategorized" || newName.ToLower() == "create new")
@@ -566,7 +566,7 @@ namespace vMenuClient.menus
 
                         if (StorageManager.SaveJsonData("saved_veh_category_" + newName, JsonConvert.SerializeObject(newCategory), false))
                         {
-                            Notify.Success($"Your category (~g~<C>{newName}</C>~s~) has been saved.");
+                            Notify.Success($"您的类别 (~g~{newName}~s~) 已被保存.");
                             Log($"Saved Category {newName}.");
                             MenuController.CloseAllMenus();
                             UpdateSavedVehicleCategoriesMenu();
@@ -577,7 +577,7 @@ namespace vMenuClient.menus
                         }
                         else
                         {
-                            Notify.Error($"Saving failed, most likely because this name (~y~<C>{newName}</C>~s~) is already in use.");
+                            Notify.Error($"保存失败, 很可能是因为该 (~y~{newName}~s~) 名称已被使用.");
                             return;
                         }
                     }
@@ -589,11 +589,11 @@ namespace vMenuClient.menus
 
                 if (StorageManager.SaveVehicleInfo(currentlySelectedVehicle.Key, vehicle, true))
                 {
-                    Notify.Success("Your vehicle was saved successfully.");
+                    Notify.Success("已成功保存您的载具.");
                 }
                 else
                 {
-                    Notify.Error("Your vehicle could not be saved. Reason unknown. :(");
+                    Notify.Error("无法保存您的载具. 原因不明 :(");
                 }
 
                 MenuController.CloseAllMenus();
@@ -613,7 +613,7 @@ namespace vMenuClient.menus
                         var item = m.GetMenuItems().Find(i => i.Index == index);
                         if (item != null && item.ItemData is KeyValuePair<string, VehicleInfo> sd)
                         {
-                            if (item.Label == "~r~Are you sure?")
+                            if (item.Label == "~r~再次确认?")
                             {
                                 Log("Unavailable saved vehicle deleted, data: " + JsonConvert.SerializeObject(sd));
                                 DeleteResourceKvp(sd.Key);
@@ -622,22 +622,22 @@ namespace vMenuClient.menus
                             }
                             else
                             {
-                                item.Label = "~r~Are you sure?";
+                                item.Label = "~r~再次确认?";
                             }
                         }
                         else
                         {
-                            Notify.Error("Somehow this vehicle could not be found.");
+                            Notify.Error("不知何故找不到这辆载具.");
                         }
                     }
                     else
                     {
-                        Notify.Error("You somehow managed to trigger deletion of a menu item that doesn't exist, how...?");
+                        Notify.Error("您以某种方式删除了一个不存在的菜单项, 这是如何做到的...?");
                     }
                 }
                 else
                 {
-                    Notify.Error("There are currrently no unavailable vehicles to delete!");
+                    Notify.Error("目前没有可删除的载具!");
                 }
             }), true));
 
@@ -659,17 +659,17 @@ namespace vMenuClient.menus
 
         private void CreateTypeMenu()
         {
-            savedVehicleTypeMenu = new("Saved Vehicles", "Select from class or custom category");
+            savedVehicleTypeMenu = new("已保存载具", "从载具类型或自定义分类中选择管理载具");
 
-            var saveVehicle = new MenuItem("Save Current Vehicle", "Save the vehicle you are currently sitting in.")
+            var saveVehicle = new MenuItem("保存当前载具", "保存您目前所乘坐的载具.")
             {
                 LeftIcon = MenuItem.Icon.CAR
             };
-            var classButton = new MenuItem("Vehicle Class", "Selected a saved vehicle by its class.")
+            var classButton = new MenuItem("载具类型", "通过载具类型管理已保存的载具.")
             {
                 Label = "→→→"
             };
-            var categoryButton = new MenuItem("Vehicle Category", "Selected a saved vehicle by its custom category.")
+            var categoryButton = new MenuItem("自定义分类", "通过自定义分类管理已保存的载具.")
             {
                 Label = "→→→"
             };
@@ -688,7 +688,7 @@ namespace vMenuClient.menus
                     }
                     else
                     {
-                        Notify.Error("You are currently not in any vehicle. Please enter a vehicle before trying to save it.");
+                        Notify.Error("您目前不在任何载具中. 请在尝试保存前进入载具.");
                     }
                 }
                 else if (item == classButton)
@@ -714,7 +714,7 @@ namespace vMenuClient.menus
         {
             if (!svMenuItems.ContainsKey(selectedItem))
             {
-                Notify.Error("In some very strange way, you've managed to select a button, that does not exist according to this list. So your vehicle could not be loaded. :( Maybe your save files are broken?");
+                Notify.Error("您以某种非常奇怪的方式选择了一个按钮, 而这个按钮在列表中并不存在. 所以您的载具无法加载?");
                 return false;
             }
             var vehInfo = svMenuItems[selectedItem];
@@ -745,14 +745,14 @@ namespace vMenuClient.menus
                     GetClassMenu().GetMenuItems()[i].RightIcon = MenuItem.Icon.NONE;
                     GetClassMenu().GetMenuItems()[i].Label = "→→→";
                     GetClassMenu().GetMenuItems()[i].Enabled = true;
-                    GetClassMenu().GetMenuItems()[i].Description = $"All saved vehicles from the {GetClassMenu().GetMenuItems()[i].Text} category.";
+                    GetClassMenu().GetMenuItems()[i].Description = $"{GetClassMenu().GetMenuItems()[i].Text} 中全部的已保存载具.";
                 }
                 else
                 {
                     GetClassMenu().GetMenuItems()[i].Label = "";
                     GetClassMenu().GetMenuItems()[i].RightIcon = MenuItem.Icon.LOCK;
                     GetClassMenu().GetMenuItems()[i].Enabled = false;
-                    GetClassMenu().GetMenuItems()[i].Description = $"You do not have any saved vehicles that belong to the {GetClassMenu().GetMenuItems()[i].Text} category.";
+                    GetClassMenu().GetMenuItems()[i].Description = $"{GetClassMenu().GetMenuItems()[i].Text} 暂无任何已保存载具的数据.";
                 }
             }
 
@@ -788,7 +788,7 @@ namespace vMenuClient.menus
                     var vclass = GetVehicleClassFromName(sv.Value.model);
                     var menu = subMenus[vclass];
 
-                    var savedVehicleBtn = new MenuItem(sv.Key.Substring(4), $"Manage this saved vehicle.")
+                    var savedVehicleBtn = new MenuItem(sv.Key.Substring(4), $"管理该已保存的载具.")
                     {
                         Label = $"({sv.Value.name}) →→→"
                     };
@@ -829,19 +829,19 @@ namespace vMenuClient.menus
 
             vehicleCategoryMenu.ClearMenuItems();
 
-            var createCategoryBtn = new MenuItem("Create Category", "Create a new vehicle category.")
+            var createCategoryBtn = new MenuItem("新建自定义分类", "创建新的自定义载具分类.")
             {
                 Label = "→→→"
             };
             vehicleCategoryMenu.AddMenuItem(createCategoryBtn);
 
-            var spacer = GetSpacerMenuItem("↓ Vehicle Categories ↓");
+            var spacer = GetSpacerMenuItem("↓ 自定义分类 ↓");
             vehicleCategoryMenu.AddMenuItem(spacer);
 
             var uncategorized = new SavedVehicleCategory
             {
-                Name = "Uncategorized",
-                Description = "All saved vehicles that have not been assigned to a category."
+                Name = "未分类",
+                Description = "所有已保存但尚未分配到自定义分类的载具."
             };
             var uncategorizedBtn = new MenuItem(uncategorized.Name, uncategorized.Description)
             {
@@ -893,8 +893,8 @@ namespace vMenuClient.menus
             }
             EndFindKvp(handle);
 
-            categories.Insert(0, "Create New");
-            categories.Insert(1, "Uncategorized");
+            categories.Insert(0, "新建");
+            categories.Insert(1, "未分类");
 
             return categories;
         }

@@ -1,0 +1,10 @@
+C:\Users\Administrator\Desktop\build\net452\vMenuClient.net.dll
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenu\obj\Debug\net452\vMenuClient.csproj.AssemblyReference.cache
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenu\obj\Debug\net452\vMenuClient.Properties.Resources.resources
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenu\obj\Debug\net452\vMenuClient.csproj.GenerateResource.cache
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenu\obj\Debug\net452\vMenuClient.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenu\obj\Debug\net452\vMenuClient.AssemblyInfoInputs.cache
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenu\obj\Debug\net452\vMenuClient.AssemblyInfo.cs
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenu\obj\Debug\net452\vMenuClient.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenu\obj\Debug\net452\vMenuCli.89F3D59C.Up2Date
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenu\obj\Debug\net452\vMenuClient.net.dll

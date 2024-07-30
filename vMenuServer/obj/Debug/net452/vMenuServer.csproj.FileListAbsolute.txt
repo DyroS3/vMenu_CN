@@ -1,0 +1,12 @@
+C:\Users\Administrator\Desktop\build\net452\config\addons.json
+C:\Users\Administrator\Desktop\build\net452\config\locations.json
+C:\Users\Administrator\Desktop\build\net452\config\permissions.cfg
+C:\Users\Administrator\Desktop\build\net452\storage.html
+C:\Users\Administrator\Desktop\build\net452\System.Numerics.dll
+C:\Users\Administrator\Desktop\build\net452\vMenuServer.net.dll
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenuServer\obj\Debug\net452\vMenuServer.csproj.AssemblyReference.cache
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenuServer\obj\Debug\net452\vMenuServer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenuServer\obj\Debug\net452\vMenuServer.AssemblyInfoInputs.cache
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenuServer\obj\Debug\net452\vMenuServer.AssemblyInfo.cs
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenuServer\obj\Debug\net452\vMenuServer.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\vMenu-3.6.3\vMenuServer\obj\Debug\net452\vMenuServer.net.dll

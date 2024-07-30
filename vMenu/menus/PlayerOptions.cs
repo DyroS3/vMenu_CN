@@ -40,49 +40,49 @@ namespace vMenuClient.menus
         {
             #region create menu and menu items
             // Create the menu.
-            menu = new Menu(Game.Player.Name, "Player Options");
+            menu = new Menu(Game.Player.Name, "玩家个人选项");
 
             // Create all checkboxes.
-            var playerGodModeCheckbox = new MenuCheckboxItem("Godmode", "Makes you invincible.", PlayerGodMode);
-            var invisibleCheckbox = new MenuCheckboxItem("Invisible", "Makes you invisible to yourself and others.", PlayerInvisible);
-            var unlimitedStaminaCheckbox = new MenuCheckboxItem("Unlimited Stamina", "Allows you to run forever without slowing down or taking damage.", PlayerStamina);
-            var fastRunCheckbox = new MenuCheckboxItem("Fast Run", "Get ~g~Snail~s~ powers and run very fast!", PlayerFastRun);
+            var playerGodModeCheckbox = new MenuCheckboxItem("无敌模式", "开启/关闭无敌模式.", PlayerGodMode);
+            var invisibleCheckbox = new MenuCheckboxItem("隐身模式", "开启/关闭隐身模式.", PlayerInvisible);
+            var unlimitedStaminaCheckbox = new MenuCheckboxItem("无限体力", "持续奔跑而不会减速或受到伤害.", PlayerStamina);
+            var fastRunCheckbox = new MenuCheckboxItem("快速奔跑", "增加当前奔跑速率!", PlayerFastRun);
             SetRunSprintMultiplierForPlayer(Game.Player.Handle, PlayerFastRun && IsAllowed(Permission.POFastRun) ? 1.49f : 1f);
-            var fastSwimCheckbox = new MenuCheckboxItem("Fast Swim", "Get ~g~Snail 2.0~s~ powers and swim super fast!", PlayerFastSwim);
+            var fastSwimCheckbox = new MenuCheckboxItem("快速游泳", "增加当前游泳速率!", PlayerFastSwim);
             SetSwimMultiplierForPlayer(Game.Player.Handle, PlayerFastSwim && IsAllowed(Permission.POFastSwim) ? 1.49f : 1f);
-            var superJumpCheckbox = new MenuCheckboxItem("Super Jump", "Get ~g~Snail 3.0~s~ powers and jump like a champ!", PlayerSuperJump);
-            var noRagdollCheckbox = new MenuCheckboxItem("No Ragdoll", "Disables player ragdoll, makes you not fall off your bike anymore.", PlayerNoRagdoll);
-            var neverWantedCheckbox = new MenuCheckboxItem("Never Wanted", "Disables all wanted levels.", PlayerNeverWanted);
-            var everyoneIgnoresPlayerCheckbox = new MenuCheckboxItem("Everyone Ignore Player", "Everyone will leave you alone.", PlayerIsIgnored);
-            var playerStayInVehicleCheckbox = new MenuCheckboxItem("Stay In Vehicle", "When this is enabled, NPCs will not be able to drag you out of your vehicle if they get angry at you.", PlayerStayInVehicle);
-            var playerFrozenCheckbox = new MenuCheckboxItem("Freeze Player", "Freezes your current location.", PlayerFrozen);
+            var superJumpCheckbox = new MenuCheckboxItem("超级跳跃", "增加当前跳跃高度!", PlayerSuperJump);
+            var noRagdollCheckbox = new MenuCheckboxItem("无布娃娃", "禁用布娃娃物理系统, 让您不再从自行车上摔下来.", PlayerNoRagdoll);
+            var neverWantedCheckbox = new MenuCheckboxItem("永不通缉", "禁用所有通缉级别.", PlayerNeverWanted);
+            var everyoneIgnoresPlayerCheckbox = new MenuCheckboxItem("无视自己", "行人等讲无视您所有操作.", PlayerIsIgnored);
+            var playerStayInVehicleCheckbox = new MenuCheckboxItem("保持车内", "启用此功能后,其他行人无法把您拖出车外.", PlayerStayInVehicle);
+            var playerFrozenCheckbox = new MenuCheckboxItem("冻结位置", "冻结当前位置, 无法移动.", PlayerFrozen);
 
             // Wanted level options
-            var wantedLevelList = new List<string> { "No Wanted Level", "1", "2", "3", "4", "5" };
-            var setWantedLevel = new MenuListItem("Set Wanted Level", wantedLevelList, GetPlayerWantedLevel(Game.Player.Handle), "Set your wanted level by selecting a value, and pressing enter.");
-            var setArmorItem = new MenuListItem("Set Armor Type", new List<string> { "No Armor", GetLabelText("WT_BA_0"), GetLabelText("WT_BA_1"), GetLabelText("WT_BA_2"), GetLabelText("WT_BA_3"), GetLabelText("WT_BA_4"), }, 0, "Set the armor level/type for your player.");
+            var wantedLevelList = new List<string> { "无通缉级别", "1", "2", "3", "4", "5" };
+            var setWantedLevel = new MenuListItem("设置通缉级别", wantedLevelList, GetPlayerWantedLevel(Game.Player.Handle), "选择有效值并确认.");
+            var setArmorItem = new MenuListItem("设置防弹衣级别", new List<string> { "无", GetLabelText("WT_BA_0"), GetLabelText("WT_BA_1"), GetLabelText("WT_BA_2"), GetLabelText("WT_BA_3"), GetLabelText("WT_BA_4"), }, 0, "快速设置防弹衣等级/类型.");
 
-            var healPlayerBtn = new MenuItem("Heal Player", "Give the player max health.");
-            var cleanPlayerBtn = new MenuItem("Clean Player Clothes", "Clean your player clothes.");
-            var dryPlayerBtn = new MenuItem("Dry Player Clothes", "Make your player clothes dry.");
-            var wetPlayerBtn = new MenuItem("Wet Player Clothes", "Make your player clothes wet.");
-            var suicidePlayerBtn = new MenuItem("~r~Commit Suicide", "Kill yourself by taking the pill. Or by using a pistol if you have one.");
+            var healPlayerBtn = new MenuItem("生命值重置", "给予最大生命值.");
+            var cleanPlayerBtn = new MenuItem("衣物清洗", "清除衣物任何脏污, 血迹等.");
+            var dryPlayerBtn = new MenuItem("衣物烘干", "烘干衣物, 去除水渍等.");
+            var wetPlayerBtn = new MenuItem("衣物潮湿", "弄湿当前衣物.");
+            var suicidePlayerBtn = new MenuItem("~r~自杀", "服药/使用手枪自杀.");
 
-            var vehicleAutoPilot = new Menu("Auto Pilot", "Vehicle auto pilot options.");
+            var vehicleAutoPilot = new Menu("自动驾驶", "自动驾驶选项.");
 
             MenuController.AddSubmenu(menu, vehicleAutoPilot);
 
-            var vehicleAutoPilotBtn = new MenuItem("Vehicle Auto Pilot Menu", "Manage vehicle auto pilot options.")
+            var vehicleAutoPilotBtn = new MenuItem("自动驾驶选项", "管理和查看载具自动驾驶功能.")
             {
                 Label = "→→→"
             };
 
-            var drivingStyles = new List<string>() { "Normal", "Rushed", "Avoid highways", "Drive in reverse", "Custom" };
-            var drivingStyle = new MenuListItem("Driving Style", drivingStyles, 0, "Set the driving style that is used for the Drive to Waypoint and Drive Around Randomly functions.");
+            var drivingStyles = new List<string>() { "正常", "鲁莽", "避免高速", "倒车行驶", "自定义" };
+            var drivingStyle = new MenuListItem("驾驶风格", drivingStyles, 0, "设置 '驶向航点' 和 '随机周边驾驶' 功能所使用的驾驶风格.");
 
             // Scenarios (list can be found in the PedScenarios class)
-            var playerScenarios = new MenuListItem("Player Scenarios", PedScenarios.Scenarios, 0, "Select a scenario and hit enter to start it. Selecting another scenario will override the current scenario. If you're already playing the selected scenario, selecting it again will stop the scenario.");
-            var stopScenario = new MenuItem("Force Stop Scenario", "This will force a playing scenario to stop immediately, without waiting for it to finish it's 'stopping' animation.");
+            var playerScenarios = new MenuListItem("人物场景动作", PedScenarios.Scenarios, 0, "选择一个场景动作,按回车键启动.选择另一个场景动作将覆盖当前场景.如果您已经在播放所选场景动作,再次选择该场景动作将停止播放.");
+            var stopScenario = new MenuItem("强制停止人物场景", "这将强制播放场景立即停止, 而无需等待它完成 '停止'动画.");
             #endregion
 
             #region add items to menu based on permissions
@@ -161,44 +161,45 @@ namespace vMenuClient.menus
 
                 vehicleAutoPilot.AddMenuItem(drivingStyle);
 
-                var startDrivingWaypoint = new MenuItem("Drive To Waypoint", "Make your player ped drive your vehicle to your waypoint.");
-                var startDrivingRandomly = new MenuItem("Drive Around Randomly", "Make your player ped drive your vehicle randomly around the map.");
-                var stopDriving = new MenuItem("Stop Driving", "The player ped will find a suitable place to stop the vehicle. The task will be stopped once the vehicle has reached the suitable stop location.");
-                var forceStopDriving = new MenuItem("Force Stop Driving", "This will stop the driving task immediately without finding a suitable place to stop.");
-                var customDrivingStyle = new MenuItem("Custom Driving Style", "Select a custom driving style. Make sure to also enable it by selecting the 'Custom' driving style in the driving styles list.") { Label = "→→→" };
+                var startDrivingWaypoint = new MenuItem("驾驶至导航点", "自动驾驶载具到达已设置的导航点位置.");
+                var startDrivingRandomly = new MenuItem("区域随机驾驶", "自动驾驶载具进行附近区域随机驾驶.");
+                var stopDriving = new MenuItem("停止驾驶", "自动驾驶将寻找合适地点停下. 一旦载具到达合适的停车地点, 自动驾驶则停止.");
+                var forceStopDriving = new MenuItem("强制停车", "这将立即停止驾驶任务, 而非寻找合适的地方停车.");
+                var customDrivingStyle = new MenuItem("驾驶风格自定义", "选择自定义驾驶风格.确保在驾驶风格列表中选择'自定义'驾驶风格,将其启用.") { Label = "→→→" };
                 MenuController.AddSubmenu(vehicleAutoPilot, CustomDrivingStyleMenu);
                 vehicleAutoPilot.AddMenuItem(customDrivingStyle);
                 MenuController.BindMenuItem(vehicleAutoPilot, CustomDrivingStyleMenu, customDrivingStyle);
                 var knownNames = new Dictionary<int, string>()
                 {
-                    { 0, "Stop before vehicles" },
-                    { 1, "Stop before peds" },
-                    { 2, "Avoid vehicles" },
-                    { 3, "Avoid empty vehicles" },
-                    { 4, "Avoid peds" },
-                    { 5, "Avoid objects" },
+                    { 0, "载具前自停" },              // Stop before vehicles
+                    { 1, "行人前自停" },              // Stop before peds
+                    { 2, "主动避让载具" },                  // Avoid vehicles
+                    { 3, "主动避让空车" },                  // Avoid empty vehicles
+                    { 4, "主动避让行人" },                  // Avoid peds
+                    { 5, "主动避让障碍物" },                // Avoid objects
 
-                    { 7, "Stop at traffic lights" },
-                    { 8, "Use blinkers" },
-                    { 9, "Allow going wrong way" },
-                    { 10, "Go in reverse gear" },
+                    { 7, "在红灯前停下" },              // Stop at traffic lights
+                    { 8, "使用转向灯" },                // Use blinkers
+                    { 9, "允许逆行" },                  // Allow going wrong way
+                    { 10, "倒车行驶" },                 // Go in reverse gear
 
-                    { 18, "Use shortest path" },
+                    { 18, "使用最短路径" },             // Use shortest path
 
-                    { 22, "Ignore roads" },
+                    { 22, "忽略道路" },                 // Ignore roads
 
-                    { 24, "Ignore all pathing" },
+                    { 24, "忽略所有路径" },             // Ignore all pathing
 
-                    { 29, "Avoid highways (if possible)" },
+                    { 29, "避免高速公路(如果可能)" }  // Avoid highways (if possible)
                 };
+
                 for (var i = 0; i < 31; i++)
                 {
-                    var name = "~r~Unknown Flag";
+                    var name = "~r~未知风格";
                     if (knownNames.ContainsKey(i))
                     {
                         name = knownNames[i];
                     }
-                    var checkbox = new MenuCheckboxItem(name, "Toggle this driving style flag.", false);
+                    var checkbox = new MenuCheckboxItem(name, "管理此驾驶风格开关", false);
                     CustomDrivingStyleMenu.AddMenuItem(checkbox);
                 }
                 CustomDrivingStyleMenu.OnCheckboxChange += (sender, item, index, _checked) =>
@@ -207,12 +208,12 @@ namespace vMenuClient.menus
                     CustomDrivingStyleMenu.MenuSubtitle = $"custom style: {style}";
                     if (drivingStyle.ListIndex == 4)
                     {
-                        Notify.Custom("Driving style updated.");
+                        Notify.Custom("驾驶风格已更新.");
                         SetDriveTaskDrivingStyle(Game.PlayerPed.Handle, style);
                     }
                     else
                     {
-                        Notify.Custom("Driving style NOT updated because you haven't enabled the Custom driving style in the previous menu.");
+                        Notify.Custom("由于在之前的菜单中没有启用自定义驾驶风格, 驾驶风格未更新.");
                     }
                 };
 
@@ -237,11 +238,11 @@ namespace vMenuClient.menus
                                     {
                                         var style = GetStyleFromIndex(drivingStyle.ListIndex);
                                         DriveToWp(style);
-                                        Notify.Info("Your player ped is now driving the vehicle for you. You can cancel any time by pressing the Stop Driving button. The vehicle will stop when it has reached the destination.");
+                                        Notify.Info("当前正在为您驾驶载具. 您可以随时按下停止驾驶按钮来取消, 载具将在到达目的地时停止.");
                                     }
                                     else
                                     {
-                                        Notify.Error("You need a waypoint before you can drive to it!");
+                                        Notify.Error("您需要预先放置标记一个有效导航点!");
                                     }
 
                                 }
@@ -249,22 +250,22 @@ namespace vMenuClient.menus
                                 {
                                     var style = GetStyleFromIndex(drivingStyle.ListIndex);
                                     DriveWander(style);
-                                    Notify.Info("Your player ped is now driving the vehicle for you. You can cancel any time by pressing the Stop Driving button.");
+                                    Notify.Info("当前正在为您驾驶载具. 您可以随时按下停止驾驶按钮来取消, 载具将在到达目的地时停止.");
                                 }
                             }
                             else
                             {
-                                Notify.Error("You must be the driver of this vehicle!");
+                                Notify.Error("您必须处于载具的驾驶位!!");
                             }
                         }
                         else
                         {
-                            Notify.Error("Your vehicle is broken or it does not exist!");
+                            Notify.Error("您的载具损坏或不存在!");
                         }
                     }
                     else if (item != stopDriving && item != forceStopDriving)
                     {
-                        Notify.Error("You need to be in a vehicle first!");
+                        Notify.Error("您需要先进入载具!");
                     }
                     if (item == stopDriving)
                     {
@@ -276,7 +277,7 @@ namespace vMenuClient.menus
                                 var outPos = new Vector3();
                                 if (GetNthClosestVehicleNode(Game.PlayerPed.Position.X, Game.PlayerPed.Position.Y, Game.PlayerPed.Position.Z, 3, ref outPos, 0, 0, 0))
                                 {
-                                    Notify.Info("The player ped will find a suitable place to park the car and will then stop driving. Please wait.");
+                                    Notify.Info("将为您寻觅一个合适的地方停车,然后停止驾驶.请稍等.");
                                     ClearPedTasks(Game.PlayerPed.Handle);
                                     TaskVehiclePark(Game.PlayerPed.Handle, veh.Handle, outPos.X, outPos.Y, outPos.Z, Game.PlayerPed.Heading, 3, 60f, true);
                                     while (Game.PlayerPed.Position.DistanceToSquared2D(outPos) > 3f)
@@ -285,20 +286,20 @@ namespace vMenuClient.menus
                                     }
                                     SetVehicleHalt(veh.Handle, 3f, 0, false);
                                     ClearPedTasks(Game.PlayerPed.Handle);
-                                    Notify.Info("The player ped has stopped driving.");
+                                    Notify.Info("当前已停止驾驶.");
                                 }
                             }
                         }
                         else
                         {
                             ClearPedTasks(Game.PlayerPed.Handle);
-                            Notify.Alert("Your ped is not in any vehicle.");
+                            Notify.Alert("当前已离开载具.");
                         }
                     }
                     else if (item == forceStopDriving)
                     {
                         ClearPedTasks(Game.PlayerPed.Handle);
-                        Notify.Info("Driving task cancelled.");
+                        Notify.Info("自动驾驶模式已取消.");
                     }
                 };
 
@@ -308,7 +309,7 @@ namespace vMenuClient.menus
                     {
                         var style = GetStyleFromIndex(listIndex);
                         SetDriveTaskDrivingStyle(Game.PlayerPed.Handle, style);
-                        Notify.Info($"Driving task style is now set to: ~r~{drivingStyles[listIndex]}~s~.");
+                        Notify.Info($"驾驶任务风格现在设置为: ~r~{drivingStyles[listIndex]}~s~.");
                     }
                 };
             }
@@ -419,7 +420,7 @@ namespace vMenuClient.menus
                     SetPlayerWantedLevel(Game.Player.Handle, listIndex, false);
                     SetPlayerWantedLevelNow(Game.Player.Handle, false);
                 }
-                // Player Scenarios 
+                // Player Scenarios
                 else if (listItem == playerScenarios)
                 {
                     PlayScenario(PedScenarios.ScenarioNames[PedScenarios.Scenarios[listIndex]]);
@@ -443,22 +444,22 @@ namespace vMenuClient.menus
                 else if (item == healPlayerBtn)
                 {
                     Game.PlayerPed.Health = Game.PlayerPed.MaxHealth;
-                    Notify.Success("Player healed.");
+                    Notify.Success("当前生命值已恢复治愈.");
                 }
                 else if (item == cleanPlayerBtn)
                 {
                     Game.PlayerPed.ClearBloodDamage();
-                    Notify.Success("Player clothes have been cleaned.");
+                    Notify.Success("当前服装已清污.");
                 }
                 else if (item == dryPlayerBtn)
                 {
                     Game.PlayerPed.WetnessHeight = 0f;
-                    Notify.Success("Player is now dry.");
+                    Notify.Success("当前服装已烘干.");
                 }
                 else if (item == wetPlayerBtn)
                 {
                     Game.PlayerPed.WetnessHeight = 2f;
-                    Notify.Success("Player is now wet.");
+                    Notify.Success("当前服装已侵湿.");
                 }
                 else if (item == suicidePlayerBtn)
                 {
