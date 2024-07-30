@@ -1,3 +1,10 @@
+### vMenu 中译版本
+此为 vMenu 中译版本分支, 提供vMenu的汉化版, 汉化源码.
+
+效果图
+![QQ20240730-234953](https://github.com/user-attachments/assets/cdd48179-3188-46b2-8cc9-b52b60d5182d)
+
+--------
 #### Latest Builds
 
 ##### Latest AppVeyor build
